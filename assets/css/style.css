@@ -1,6 +1,6 @@
 body {
 	background: skyblue; /*add image*/
-	width: 100%;
+	max-width: 100%;
 }
 
 img {
@@ -8,6 +8,6 @@ img {
 	width: 100%;
 }
 
-.stage-2 {
+.stage-2, .stage-3, .stage-4 {
 	display: none;
 }
