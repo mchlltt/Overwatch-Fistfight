@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+$(document).ready(function() {
 	// Game object
 	game = {
 		// Variables
@@ -40,102 +40,135 @@ $( document ).ready(function() {
 		heroHealthLost: 0,
 		attackMultiplier: 1,
 		opponentHealthLost: 0,
-		opponentsDefeated: 0,
+		defeatedOpponents: [],
 
 		// Methods
-		heroSelect: function(x) {
+		setHero: function(x) {
 			game.hero = game.heroes[x];
 			// push content to do with the hero to the hero div.
 			$('.stage-1').hide();
 			$('.stage-2').show();
 		},
 
-		opponentSelect: function(x) {
+		displayOpponentChoices: function() {
+			return;
+			// Somehow determine who is eligible to be fought and display them.
+		},
+
+		setOpponent: function(x) {
 			game.currentOpponent = x;
 			// push content to do with the opponent to the opponenent div.
 			$('.stage-2').hide();
 			$('.stage-3').show();
 		},
 
-		attackUpdate: function() {
-			// Update values then display them.
+		updateHealthAndAttack: function() {
+			// Update values.
 			game.opponentHealthLost += game.hero.attackPower * game.attackMultiplier;
 			game.heroHealthLost += game.opponent.counterAttackPower;
 			game.attackMultiplier++;
-			//Display them.
-			// Then check whether to do anything else.
-			game.winLossCheck();
+			// Display them.
 		},
 
-		winLossCheck: function() {
-			// If you lose all your HP, you lose the game.
+		isPlayerDead: function() {
+			// Does your opponent have HP remaining or are you out of health?
 			if (game.hero.healthPoints - game.heroHealthLost <= 0) {
-				game.lossBehavior();
-			}
-			// If your opponent loses all their HP, you win the round.
-			 else if (game.currentOpponent.healthPoints - game.opponentHealthLost <= 0) {
-				game.roundWinBehavior();
-			// Otherwise, just await next click.
+				return true;
 			} else {
-				return;
+				return false;
 			}
 		},
 
-		roundWinBehavior: function() {
-			// Find the index of the opponent you just defeated.
-			var index = game.potentialOpponents.id.indexOf(game.currentOpponent);
-			// remove them from the array of potential opponents
-			game.potentialOpponents.splice(index, 1);
-			game.opponentsDefeated++;
-			// If you've defeated 3 opponents, you win the game!
-			if (game.opponentsDefeated === 3) {
-				game.gameWinBehavior();
+		isOpponentDead: function(){
+			if (game.currentOpponent.healthPoints - game.opponentHealthLost <= 0) {
+				game.defeatedOpponents.push(game.currentOpponent);
+				return true;
+			} else {
+				return false;
 			}
 		},
 
-		gameWinBehavior: function() {
-			$('.stage-2').show();
-			$('.stage-4').show();
-			$('#completion-message').text('You win!');
-			$('#completion-story').text('Peace abounds + everybody loves you.');
+		isRoundComplete: function() {
+			if (game.isPlayerDead()) {
+				game.announceGameResult(result = 'loss');
+			} else if (game.isOpponentDead()) {
+				if (game.isGameComplete()) {
+					game.announceGameResult(result='win');
+				} else {
+					game.createNewround();
+				}
+			}
 		},
 
-		lossBehavior: function() {
-			$('.stage-2').show();
-			$('.stage-4').show();
-			$('#completion-message').text('You lose.');
-			$('#completion-story').text('Everyone you care about is dead.');
+		createNewRound: function() {
+			game.opponentHealthLost = 0;
+			game.currentOpponent = {};
+			game.displayOpponentChoices();
+		},
+ 
+		isGameComplete: function() {
+			if (game.opponentsDefeated.length === 3) {
+				return true;
+			} else {
+				return false;
+			}
 		},
 
-		gameReset: function() {
+		announceGameResult: function(result) {
+			$('.stage-2').show();
+			$('.stage-4').show();
+			if (result === 'win') {
+				$('#completion-message').text('You win!');
+				$('#completion-story').text('Peace abounds + everybody loves you.');
+			} else {
+				$('#completion-message').text('You lose.');
+				$('#completion-story').text('Everyone you care about is dead. Also you.');
+			}
+		},
+
+		createNewGame: function() {
 			game.heroHealthLost = 0;
 			game.attackMultiplier = 1;
 			game.opponentHealthLost = 0;
-			game.currentHero = '';
-			game.currentOpponent = '';
+			game.currentHero = {};
+			game.currentOpponent = {};
+			game.opponentsDefeated.empty();
 			$('.stage-1').show();
 			$('.stage-2').hide();
 			$('.stage-4').hide();
 		}
+
+		// prepareNewRound: function() {
+		// 	// Find the index of the opponent you just defeated.
+		// 	var index = game.potentialOpponents.id.indexOf(game.currentOpponent);
+		// 	// remove them from the array of potential opponents
+		// 	game.potentialOpponents.splice(index, 1);
+		// 	game.opponentsDefeated++;
+		// 	// If you've defeated 3 opponents, you win the game!
+		// 	if (game.opponentsDefeated === 3) {
+		// 		game.announceGameResult(result='win');
+		// 	}
+		// },
 	};
 
 
 	// On-click functions
 
 	$('.hero-select').on('click', function() {
-		game.heroSelect(this.value);
+		game.selectHero(this.value);
 	});
 
 	$('.opponent-select').on('click', function() {
-		game.opponentSelect(this.value);
+		game.selectOpponent(this.value);
 	});
 
 	$('#button-attack').on('click', function() {
-		game.attackUpdate();		
+		game.updateHealthAndAttack();
+		game.isRoundComplete();	
 	});
 
 	$('#button-reset').on('click', function() {
-		game.gameReset();
+		game.createNewGame();
 	});
 
 });
