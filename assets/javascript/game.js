@@ -7,31 +7,31 @@ $(document).ready(function() {
 	heroData = [{
         id: 0,
         name: 'Lucio',
-        bio: 'a boy and a friend',
-        attackPower: 14,
-        counterAttackPower: 10,
-        healthPoints: 100
+        bio: 'ready to roll',
+        attackPower: 8,
+        counterAttackPower: 12,
+        healthPoints: 110
     }, {
         id: 1,
         name: 'D.Va',
-        bio: 'dorito gremlin',
-        attackPower: 8,
-        counterAttackPower: 12,
-        healthPoints: 120
-    }, {
-        id: 2,
-        name: 'Symmetra',
-        bio: 'the powers that be',
-        attackPower: 6,
+        bio: 'ready to get some kills',
+        attackPower: 5,
         counterAttackPower: 8,
         healthPoints: 150
     }, {
+        id: 2,
+        name: 'Symmetra',
+        bio: 'will put you in your place',
+        attackPower: 7,
+        counterAttackPower: 10,
+        healthPoints: 130
+    }, {
         id: 3,
         name: 'Zarya',
-        bio: 'get rekt',
-        attackPower: 4,
-        counterAttackPower: 12,
-        healthPoints: 180
+        bio: 'can bench more than you',
+        attackPower: 7,
+        counterAttackPower: 14,
+        healthPoints: 120
     }];
 
     // Game object
@@ -42,7 +42,6 @@ $(document).ready(function() {
         heroHealthLost: 0,
         attackMultiplier: 1,
         opponentHealthLost: 0,
-        defeatedOpponents: [],
 
         // Methods
         displayHeroChoices: function() {
@@ -52,7 +51,7 @@ $(document).ready(function() {
         		var heroDiv = $('#hero-' + i);
         		// Create HTML based upon the hero's attributes,
         		heroHTML = (
-	        		'<h4 class="text-center">' + game.heroes[i].name + '</h4>' +
+	        		'<h2 class="text-center">' + game.heroes[i].name + '</h2>' +
 	        		'<img src="assets/images/' + game.heroes[i].name + '.png" role="button" ' +
 	        		'alt="Image of ' + game.heroes[i].name + '" class="center-block hero-select" id = "' + i + '">' +
 					'<p class="text-center">' + game.heroes[i].bio + '</p>' +
@@ -91,7 +90,7 @@ $(document).ready(function() {
         	for (var i=0;i < game.heroes.length;i++) {
         		var opponentDiv = $('#opponent-' + i);
         		opponentHTML = (
-	        		'<h4 class="text-center">' + game.heroes[i].name + '</h4>' +
+	        		'<h2 class="text-center">' + game.heroes[i].name + '</h2>' +
 	        		'<img src="assets/images/' + game.heroes[i].name + '.png" role="button" ' +
 	        		'alt="Image of ' + game.heroes[i].name + '" class="center-block opponent-select" id = "0' + i +'">' +
 					'<p class="text-center">' + game.heroes[i].bio + '</p>' +
@@ -118,20 +117,21 @@ $(document).ready(function() {
 	            $('.col-xs-12').removeClass('col-xs-6');            	
             }
             game.displayBattle();
+            $('#selected-hero').hide();
         },
 
         displayBattle: function() {
         	var heroBattlePortrait = $('#your-hero');
         	var opponentBattlePortrait = $('#your-opponent');
     		var heroHTML = (
-        		'<h4 class="text-center">' + game.hero.name + '</h4>' +
+        		'<h2 class="text-center">' + game.hero.name + '</h2>' +
         		'<img src="assets/images/' + game.hero.name + '.png"' +
         		'alt="Image of ' + game.hero.name + '" class="center-block">' +
 				'<p class="text-center">' + game.hero.bio + '</p>' +
 				'<p class="text-center" id="hero-health">Health:' + (game.hero.healthPoints - game.heroHealthLost) + '</p>'
 			);
     		var opponentHTML = (
-        		'<h4 class="text-center">' + game.currentOpponent.name + '</h4>' +
+        		'<h2 class="text-center">' + game.currentOpponent.name + '</h2>' +
         		'<img src="assets/images/' + game.currentOpponent.name + '.png"' +
         		'alt="Image of ' + game.currentOpponent.name + '" class="center-block">' +
 				'<p class="text-center">' + game.currentOpponent.bio + '</p>' +
@@ -213,14 +213,15 @@ $(document).ready(function() {
         },
 
         announceGameResult: function(result) {
+            $('.stage-3').show();
             $('.stage-4').show();
             $('#button-attack').hide();
             if (result === 'win') {
                 $('#completion-message').text('You win!');
-                $('#completion-story').text('Peace abounds + everybody loves you.');
+                $('#button-reset').html('<p class="button-text">Keep on punching</p>');
             } else {
                 $('#completion-message').text('You lose.');
-                $('#completion-story').text('Everyone you care about is dead. Also you.');
+                $('#button-reset').html('<p class="button-text">Walk it off</p>');
             }
         },
 
