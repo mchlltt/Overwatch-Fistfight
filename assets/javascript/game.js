@@ -2,11 +2,11 @@
 
 
 $(document).ready(function() {
-	
-	// A static copy of hero data to clone for use in the game object.
-	heroData = [{
+
+    // A static copy of hero data to clone for use in the game object.
+    heroData = [{
         id: 0,
-        name: 'Lucio',
+        name: 'Lúcio',
         bio: 'ready to roll',
         attackPower: 8,
         counterAttackPower: 12,
@@ -45,21 +45,21 @@ $(document).ready(function() {
 
         // Methods
         displayHeroChoices: function() {
-        	// For each hero...
-        	for (var i=0;i < game.heroes.length;i++) {
-        		// select the hero div with its ID,
-        		var heroDiv = $('#hero-' + i);
-        		// Create HTML based upon the hero's attributes,
-        		heroHTML = (
-	        		'<h2 class="text-center">' + game.heroes[i].name + '</h2>' +
-	        		'<img src="assets/images/' + game.heroes[i].name + '.png" role="button" ' +
-	        		'alt="Image of ' + game.heroes[i].name + '" class="center-block hero-select" id = "' + i + '">' +
-					'<p class="text-center">' + game.heroes[i].bio + '</p>' +
-					'<p class="text-center">Health:' + game.heroes[i].healthPoints + '</p>'
-				);
-				// then set the HTML of the selected div to the HTML defined above.
-				heroDiv.html(heroHTML);
-        	}
+            // For each hero...
+            for (var i = 0; i < game.heroes.length; i++) {
+                // select the hero div with its ID,
+                var heroDiv = $('#hero-' + i);
+                // Create HTML based upon the hero's attributes,
+                heroHTML = (
+                    '<h2 class="text-center">' + game.heroes[i].name + '</h2>' +
+                    '<img src="assets/images/' + game.heroes[i].name + '.png" role="button" ' +
+                    'alt="Image of ' + game.heroes[i].name + '" class="center-block hero-select" id = "' + i + '">' +
+                    '<p class="text-center">' + game.heroes[i].bio + '</p>' +
+                    '<p class="text-center">Health:' + game.heroes[i].healthPoints + '</p>'
+                );
+                // then set the HTML of the selected div to the HTML defined above.
+                heroDiv.html(heroHTML);
+            }
         },
 
         setHero: function(index) {
@@ -72,32 +72,32 @@ $(document).ready(function() {
             // Display selected hero's name.
             game.displaySelectedHeroName();
             // Display opponents to choose from.
-        	game.displayOpponentChoices();
+            game.displayOpponentChoices();
         },
 
         displaySelectedHeroName: function() {
-        	// Select div for displaying selected hero's name.
-        	var heroNameDiv = $('#selected-hero');
-        	// Create HTML based on the selected hero's name.
-        	var heroNameHTML = (
-        		'You Selected ' + game.hero.name
-      		);
-      		// Set the HTML of the selected div to the HTML created above.
-      		heroNameDiv.html(heroNameHTML);
+            // Select div for displaying selected hero's name.
+            var heroNameDiv = $('#selected-hero');
+            // Create HTML based on the selected hero's name.
+            var heroNameHTML = (
+                'Playing as ' + game.hero.name
+            );
+            // Set the HTML of the selected div to the HTML created above.
+            heroNameDiv.html(heroNameHTML);
         },
 
         displayOpponentChoices: function() {
-        	for (var i=0;i < game.heroes.length;i++) {
-        		var opponentDiv = $('#opponent-' + i);
-        		opponentHTML = (
-	        		'<h2 class="text-center">' + game.heroes[i].name + '</h2>' +
-	        		'<img src="assets/images/' + game.heroes[i].name + '.png" role="button" ' +
-	        		'alt="Image of ' + game.heroes[i].name + '" class="center-block opponent-select" id = "0' + i +'">' +
-					'<p class="text-center">' + game.heroes[i].bio + '</p>' +
-					'<p class="text-center">Health:' + game.heroes[i].healthPoints + '</p>'
-				);
-				opponentDiv.html(opponentHTML);
-        	}
+            for (var i = 0; i < game.heroes.length; i++) {
+                var opponentDiv = $('#opponent-' + i);
+                opponentHTML = (
+                    '<h2 class="text-center">' + game.heroes[i].name + '</h2>' +
+                    '<img src="assets/images/' + game.heroes[i].name + '.png" role="button" ' +
+                    'alt="Image of ' + game.heroes[i].name + '" class="center-block opponent-select" id = "0' + i + '">' +
+                    '<p class="text-center">' + game.heroes[i].bio + '</p>' +
+                    '<p class="text-center">Health:' + game.heroes[i].healthPoints + '</p>'
+                );
+                opponentDiv.html(opponentHTML);
+            }
             $('.stage-2').show();
         },
 
@@ -108,37 +108,37 @@ $(document).ready(function() {
             $('.stage-2').hide();
             // Removes a column and resizes the others when an opponent is selected.
             if (game.heroes.length === 2) {
-				$('.col-xs-4:last').remove();
-	            $('.col-xs-4').addClass('col-xs-6');
-	            $('.col-xs-6').removeClass('col-xs-4');
+                $('.col-xs-4:last').remove();
+                $('.col-xs-4').addClass('col-xs-6');
+                $('.col-xs-6').removeClass('col-xs-4');
             } else if (game.heroes.length === 1) {
-				$('.col-xs-6:last').remove();
-	            $('.col-xs-6').addClass('col-xs-12');
-	            $('.col-xs-12').removeClass('col-xs-6');            	
+                $('.col-xs-6:last').remove();
+                $('.col-xs-6').addClass('col-xs-12');
+                $('.col-xs-12').removeClass('col-xs-6');
             }
             game.displayBattle();
             $('#selected-hero').hide();
         },
 
         displayBattle: function() {
-        	var heroBattlePortrait = $('#your-hero');
-        	var opponentBattlePortrait = $('#your-opponent');
-    		var heroHTML = (
-        		'<h2 class="text-center">' + game.hero.name + '</h2>' +
-        		'<img src="assets/images/' + game.hero.name + '.png"' +
-        		'alt="Image of ' + game.hero.name + '" class="center-block">' +
-				'<p class="text-center">' + game.hero.bio + '</p>' +
-				'<p class="text-center" id="hero-health">Health:' + (game.hero.healthPoints - game.heroHealthLost) + '</p>'
-			);
-    		var opponentHTML = (
-        		'<h2 class="text-center">' + game.currentOpponent.name + '</h2>' +
-        		'<img src="assets/images/' + game.currentOpponent.name + '.png"' +
-        		'alt="Image of ' + game.currentOpponent.name + '" class="center-block">' +
-				'<p class="text-center">' + game.currentOpponent.bio + '</p>' +
-				'<p class="text-center" id="opponent-health">Health:' + game.currentOpponent.healthPoints + '</p>'
-			);
-			heroBattlePortrait.html(heroHTML);
-			opponentBattlePortrait.html(opponentHTML);
+            var heroBattlePortrait = $('#your-hero');
+            var opponentBattlePortrait = $('#your-opponent');
+            var heroHTML = (
+                '<h2 class="text-center">' + game.hero.name + '</h2>' +
+                '<img src="assets/images/' + game.hero.name + '.png"' +
+                'alt="Image of ' + game.hero.name + '" class="center-block">' +
+                '<p class="text-center">' + game.hero.bio + '</p>' +
+                '<p class="text-center" id="hero-health">Health:' + (game.hero.healthPoints - game.heroHealthLost) + '</p>'
+            );
+            var opponentHTML = (
+                '<h2 class="text-center">' + game.currentOpponent.name + '</h2>' +
+                '<img src="assets/images/' + game.currentOpponent.name + '.png"' +
+                'alt="Image of ' + game.currentOpponent.name + '" class="center-block">' +
+                '<p class="text-center">' + game.currentOpponent.bio + '</p>' +
+                '<p class="text-center" id="opponent-health">Health:' + game.currentOpponent.healthPoints + '</p>'
+            );
+            heroBattlePortrait.html(heroHTML);
+            opponentBattlePortrait.html(opponentHTML);
         },
 
         updateHealthAndAttack: function() {
@@ -180,7 +180,7 @@ $(document).ready(function() {
 
         isOpponentDead: function() {
             if (game.currentOpponent.healthPoints - game.opponentHealthLost <= 0) {
-        		$('.stage-3').hide();
+                $('.stage-3').hide();
                 return true;
             } else {
                 return false;
@@ -188,12 +188,19 @@ $(document).ready(function() {
         },
 
         displayUpdatedBattle: function() {
-        	var heroHP = $('#hero-health');
-        	var opponentHP = $('#opponent-health');
-        	heroHP.html('Health:' + (game.hero.healthPoints -
-				game.heroHealthLost));
-        	opponentHP.html('Health:' + (game.currentOpponent.healthPoints -
-				game.opponentHealthLost));
+            var heroHPDiv = $('#hero-health');
+            var opponentHPDiv = $('#opponent-health');
+            var heroHP = game.hero.healthPoints - game.heroHealthLost;
+            var opponentHP = game.currentOpponent.healthPoints - game.opponentHealthLost;
+            // We don't want to display negative values, so set negative values to 0 before display.
+            if (heroHP < 0) {
+                heroHP = 0;
+            }
+            if (opponentHP < 0) {
+                opponentHP = 0;
+            }
+            heroHPDiv.html('Health:' + heroHP);
+            opponentHPDiv.html('Health:' + opponentHP);
         },
 
         createNewRound: function() {
@@ -226,12 +233,12 @@ $(document).ready(function() {
         },
 
         createNewGame: function() {
-        	// Reset variables to initial values.
+            // Reset variables to initial values.
             game.heroHealthLost = 0;
             game.attackMultiplier = 1;
             game.opponentHealthLost = 0;
             game.currentHero = {};
-            game.currentOpponent = {}; 
+            game.currentOpponent = {};
             $('body').html(originalHTML);
             game.heroes = heroData.slice(0);
             // Hide all but the hero select div.
@@ -260,7 +267,7 @@ $(document).ready(function() {
 
     // Use different listener notation because .opponent-select
     // does not exist when this script is first run.
-    $(document).on('click','.opponent-select', function(){
+    $(document).on('click', '.opponent-select', function() {
         var opponentIndex = this.id;
         opponentIndex = parseInt(opponentIndex, 10);
         game.setOpponent(index = opponentIndex);
