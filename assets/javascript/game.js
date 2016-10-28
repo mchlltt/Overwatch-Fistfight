@@ -38,13 +38,89 @@ $(document).ready(function() {
     game = {
         heroes: heroData.slice(0),
         hero: {},
-        currentOpponent: {},
+        opponent: {},
         heroHealthLost: 0,
         attackMultiplier: 1,
         opponentHealthLost: 0,
 
         // Methods
-        displayHeroChoices: function() {
+
+        setHero: function(index) {
+            // Set hero.
+            game.hero = game.heroes[index];
+            // Remove hero from heroes array.
+            game.heroes.splice(index, 1);
+        },
+
+        setOpponent: function(index) {
+            game.opponent = game.heroes[index];
+            game.heroes.splice(index, 1);
+
+        },
+
+        updateHealthAndAttack: function() {
+            // Update values.
+            game.opponentHealthLost += game.hero.attackPower * game.attackMultiplier;
+            game.heroHealthLost += game.opponent.counterAttackPower;
+            game.attackMultiplier++;
+        },
+
+        isRoundComplete: function() {
+            // If no one died, round is not complete.
+            if (!game.isPlayerDead() && !game.isOpponentDead()) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+
+        isPlayerDead: function() {
+            // Does your opponent have HP remaining or are you out of health?
+            if (game.hero.healthPoints - game.heroHealthLost <= 0) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        isOpponentDead: function() {
+            if (game.opponent.healthPoints - game.opponentHealthLost <= 0) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        createNewRound: function() {
+            // Reset opponent stats.
+            game.opponentHealthLost = 0;
+            game.opponent = {};
+        },
+
+        isGameComplete: function() {
+            if (game.heroes.length === 0) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        createNewGame: function() {
+            // Reset variables to initial values.
+            game.heroHealthLost = 0;
+            game.attackMultiplier = 1;
+            game.opponentHealthLost = 0;
+            game.currentHero = {};
+            game.opponent = {};
+            game.heroes = heroData.slice(0);
+        }
+    };
+
+
+    renderDOM = function(change) {
+        if (change === 'initialize') {
+            // Save a copy of the original HTML.
+            var originalHTML = $('body').html();
             // For each hero...
             for (var i = 0; i < game.heroes.length; i++) {
                 // select the hero div with its ID,
@@ -60,33 +136,11 @@ $(document).ready(function() {
                 // then set the HTML of the selected div to the HTML defined above.
                 heroDiv.html(heroHTML);
             }
-        },
-
-        setHero: function(index) {
-            // Set hero.
-            game.hero = game.heroes[index];
+        } else if (change === 'setHero') {
             // Hide hero select.
             $('.stage-1').hide();
-            // Remove hero from heroes array.
-            game.heroes.splice(index, 1);
-            // Display selected hero's name.
-            game.displaySelectedHeroName();
-            // Display opponents to choose from.
-            game.displayOpponentChoices();
-        },
-
-        displaySelectedHeroName: function() {
-            // Select div for displaying selected hero's name.
-            var heroNameDiv = $('#selected-hero');
-            // Create HTML based on the selected hero's name.
-            var heroNameHTML = (
-                'Playing as ' + game.hero.name
-            );
-            // Set the HTML of the selected div to the HTML created above.
             heroNameDiv.html(heroNameHTML);
-        },
-
-        displayOpponentChoices: function() {
+            // Render opponent select.
             for (var i = 0; i < game.heroes.length; i++) {
                 var opponentDiv = $('#opponent-' + i);
                 opponentHTML = (
@@ -99,27 +153,7 @@ $(document).ready(function() {
                 opponentDiv.html(opponentHTML);
             }
             $('.stage-2').show();
-        },
-
-        setOpponent: function(index) {
-            game.currentOpponent = game.heroes[index];
-            $('.stage-3').show();
-            game.heroes.splice(index, 1);
-            $('.stage-2').hide();
-            // Removes a column and resizes the others when an opponent is selected.
-            if (game.heroes.length === 2) {
-                $('.col-xs-4:last').remove();
-                $('.col-xs-4').addClass('col-xs-6');
-                $('.col-xs-6').removeClass('col-xs-4');
-            } else if (game.heroes.length === 1) {
-                $('.col-xs-6:last').remove();
-                $('.col-xs-6').addClass('col-xs-12');
-                $('.col-xs-12').removeClass('col-xs-6');
-            }
-            game.displayBattle();
-        },
-
-        displayBattle: function() {
+        } else if (change === 'setOpponent') {
             var heroBattlePortrait = $('#your-hero');
             var opponentBattlePortrait = $('#your-opponent');
             var heroHTML = (
@@ -130,178 +164,90 @@ $(document).ready(function() {
                 '<p class="text-center" id="hero-health">Health: ' + (game.hero.healthPoints - game.heroHealthLost) + '</p>'
             );
             var opponentHTML = (
-                '<h3 class="text-center">' + game.currentOpponent.name + '</h3>' +
-                '<img src="assets/images/' + game.currentOpponent.name + '.png"' +
-                'alt="Image of ' + game.currentOpponent.name + '" class="center-block">' +
-                '<p class="text-center">' + game.currentOpponent.bio + '</p>' +
-                '<p class="text-center" id="opponent-health">Health: ' + game.currentOpponent.healthPoints + '</p>'
+                '<h3 class="text-center">' + game.opponent.name + '</h3>' +
+                '<img src="assets/images/' + game.opponent.name + '.png"' +
+                'alt="Image of ' + game.opponent.name + '" class="center-block">' +
+                '<p class="text-center">' + game.opponent.bio + '</p>' +
+                '<p class="text-center" id="opponent-health">Health: ' + game.opponent.healthPoints + '</p>'
             );
             heroBattlePortrait.html(heroHTML);
             opponentBattlePortrait.html(opponentHTML);
             // Small formatting workaround to make the center column the same height as the outer columns.
             $('.col-xs-2').height($('.col-xs-5').height());
-
-        },
-
-        updateHealthAndAttack: function() {
-            // Update values.
-            game.opponentHealthLost += game.hero.attackPower * game.attackMultiplier;
-            game.heroHealthLost += game.currentOpponent.counterAttackPower;
-            game.attackMultiplier++;
-        },
-
-        isRoundComplete: function() {
-            game.displayUpdatedBattle();
-            // If the player dies, game is over.
-            if (game.isPlayerDead()) {
-                // The player loses.
-                game.announceGameResult(result = 'loss');
-                // If the opponent dies, the round is over.
-            } else if (game.isOpponentDead()) {
-                // If all opponents are dead, game is over.
-                if (game.isGameComplete()) {
-                    // The player wins!
-                    game.announceGameResult(result = 'win');
-                    // If not all opponents are dead, round is over.
-                } else {
-                    // Another round is created.
-                    game.createNewRound();
-                }
-                // If no one died, do nothing.
-            }
-        },
-
-        isPlayerDead: function() {
-            // Does your opponent have HP remaining or are you out of health?
-            if (game.hero.healthPoints - game.heroHealthLost <= 0) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-
-        isOpponentDead: function() {
-            if (game.currentOpponent.healthPoints - game.opponentHealthLost <= 0) {
-                $('.stage-3').hide();
-                return true;
-            } else {
-                return false;
-            }
-        },
-
-        displayUpdatedBattle: function() {
+        } else if (change === 'attack') {
             var heroHPDiv = $('#hero-health');
             var opponentHPDiv = $('#opponent-health');
             var heroHP = game.hero.healthPoints - game.heroHealthLost;
-            var opponentHP = game.currentOpponent.healthPoints - game.opponentHealthLost;
+            var opponentHP = game.opponent.healthPoints - game.opponentHealthLost;
             // We don't want to display negative values, so set negative values to 0 before display.
-            if (heroHP < 0) {
-                heroHP = 0;
-            }
-            if (opponentHP < 0) {
-                opponentHP = 0;
-            }
+            if (heroHP < 0) { heroHP = 0; }
+            if (opponentHP < 0) { opponentHP = 0; }
             // Update values, and animate the update.
             heroHPDiv.html('Health: ' + heroHP);
-            heroHPDiv.animate(
-                {color: '#451111'},
-                200, function(){
-                    $(this).animate({color: '#333'},100);
-                }
-            );
+            animateText(heroHPDiv);
             opponentHPDiv.html('Health: ' + opponentHP);
-            opponentHPDiv.animate(
-                {color: '#451111'},
-                200, function(){
-                    $(this).animate({color: '#333'},100);
-                }
-            );
-        },
-
-        createNewRound: function() {
-            // Reset opponent stats.
-            game.opponentHealthLost = 0;
-            game.currentOpponent = {};
-            // Display opponent choices again.
-            game.displayOpponentChoices();
-        },
-
-        isGameComplete: function() {
-            if (game.heroes.length === 0) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-
-        announceGameResult: function(result) {
-            $('.stage-3').show();
+            animatetext(opponentHPDiv);
+        } else if (change === 'win') {
             $('.stage-4').show();
             $('#button-attack').hide();
-            if (result === 'win') {
-                $('#completion-message').text('You win!');
-                $('#button-reset').html('<p class="button-text">Keep on punching</p>');
-            } else {
-                $('#completion-message').text('You lose.');
-                $('#button-reset').html('<p class="button-text">Walk it off</p>');
-            }
-        },
-
-        createNewGame: function() {
-            // Reset variables to initial values.
-            game.heroHealthLost = 0;
-            game.attackMultiplier = 1;
-            game.opponentHealthLost = 0;
-            game.currentHero = {};
-            game.currentOpponent = {};
+            $('#completion-message').text('You win!');
+            $('#button-reset').html('<p class="button-text">Keep on punching</p>');
+        } else if (change === 'loss') {
+            $('.stage-4').show();
+            $('#button-attack').hide();
+            $('#completion-message').text('You lose.');
+            $('#button-reset').html('<p class="button-text">Walk it off</p>');
+        } else if (change === 'reset') {
+            // Revert all the HTML changes made.
             $('body').html(originalHTML);
-            game.heroes = heroData.slice(0);
-            // Hide all but the hero select div.
-            $('.stage-1').show();
-            $('.stage-2').hide();
-            $('.stage-3').hide();
-            $('.stage-4').hide();
+            renderDOM(change='initialize');
         }
+
     };
 
 
-    // Function to run immediately on DOM ready.
+    animateText = function(div) {
+        div.animate(
+            {color: '#451111'},200, function() {
+                $(this).animate({color: '#333'},100);
+            }
+    }
 
-    game.displayHeroChoices();
-    var originalHTML = $('body').html();
+    // Function to run immediately on DOM ready.
+    renderDOM('initialize');
+    
+
+
 
 
     // On-click functions
+    // Using different listener notation because some classes
+    // do not exist when this script is first run.
 
     $(document).on('click', '.hero-select', function(event) {
         var heroIndex = this.id;
         heroIndex = parseInt(heroIndex, 10);
         game.setHero(index = heroIndex);
+        renderDOM(change = 'setHero');
     });
 
-
-    // Use different listener notation because .opponent-select
-    // does not exist when this script is first run.
     $(document).on('click', '.opponent-select', function() {
         var opponentIndex = this.id;
         opponentIndex = parseInt(opponentIndex, 10);
         game.setOpponent(index = opponentIndex);
-        $('.stage-2').hide();
+        renderDOM(change = 'setOpponent');
     });
 
     $(document).on('click', '#button-attack', function(event) {
         game.updateHealthAndAttack();
-        game.displayUpdatedBattle();
         game.isRoundComplete();
+        renderDOM(change = 'attack');
     });
 
     $(document).on('click', '#button-reset', function(event) {
         game.createNewGame();
+        renderDOM(change = 'reset');
     });
-
-
-    // Small formatting workaround
-
 
 
 });
