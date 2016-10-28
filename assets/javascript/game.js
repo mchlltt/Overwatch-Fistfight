@@ -51,11 +51,11 @@ $(document).ready(function() {
                 var heroDiv = $('#hero-' + i);
                 // Create HTML based upon the hero's attributes,
                 heroHTML = (
-                    '<h2 class="text-center">' + game.heroes[i].name + '</h2>' +
+                    '<h3 class="text-center">' + game.heroes[i].name + '</h3>' +
                     '<img src="assets/images/' + game.heroes[i].name + '.png" role="button" ' +
                     'alt="Image of ' + game.heroes[i].name + '" class="center-block hero-select" id = "' + i + '">' +
                     '<p class="text-center">' + game.heroes[i].bio + '</p>' +
-                    '<p class="text-center">Health:' + game.heroes[i].healthPoints + '</p>'
+                    '<p class="text-center">Health: ' + game.heroes[i].healthPoints + '</p>'
                 );
                 // then set the HTML of the selected div to the HTML defined above.
                 heroDiv.html(heroHTML);
@@ -90,11 +90,11 @@ $(document).ready(function() {
             for (var i = 0; i < game.heroes.length; i++) {
                 var opponentDiv = $('#opponent-' + i);
                 opponentHTML = (
-                    '<h2 class="text-center">' + game.heroes[i].name + '</h2>' +
+                    '<h3 class="text-center">' + game.heroes[i].name + '</h3>' +
                     '<img src="assets/images/' + game.heroes[i].name + '.png" role="button" ' +
                     'alt="Image of ' + game.heroes[i].name + '" class="center-block opponent-select" id = "0' + i + '">' +
                     '<p class="text-center">' + game.heroes[i].bio + '</p>' +
-                    '<p class="text-center">Health:' + game.heroes[i].healthPoints + '</p>'
+                    '<p class="text-center">Health: ' + game.heroes[i].healthPoints + '</p>'
                 );
                 opponentDiv.html(opponentHTML);
             }
@@ -117,28 +117,30 @@ $(document).ready(function() {
                 $('.col-xs-12').removeClass('col-xs-6');
             }
             game.displayBattle();
-            $('#selected-hero').hide();
         },
 
         displayBattle: function() {
             var heroBattlePortrait = $('#your-hero');
             var opponentBattlePortrait = $('#your-opponent');
             var heroHTML = (
-                '<h2 class="text-center">' + game.hero.name + '</h2>' +
+                '<h3 class="text-center">' + game.hero.name + '</h3>' +
                 '<img src="assets/images/' + game.hero.name + '.png"' +
                 'alt="Image of ' + game.hero.name + '" class="center-block">' +
                 '<p class="text-center">' + game.hero.bio + '</p>' +
-                '<p class="text-center" id="hero-health">Health:' + (game.hero.healthPoints - game.heroHealthLost) + '</p>'
+                '<p class="text-center" id="hero-health">Health: ' + (game.hero.healthPoints - game.heroHealthLost) + '</p>'
             );
             var opponentHTML = (
-                '<h2 class="text-center">' + game.currentOpponent.name + '</h2>' +
+                '<h3 class="text-center">' + game.currentOpponent.name + '</h3>' +
                 '<img src="assets/images/' + game.currentOpponent.name + '.png"' +
                 'alt="Image of ' + game.currentOpponent.name + '" class="center-block">' +
                 '<p class="text-center">' + game.currentOpponent.bio + '</p>' +
-                '<p class="text-center" id="opponent-health">Health:' + game.currentOpponent.healthPoints + '</p>'
+                '<p class="text-center" id="opponent-health">Health: ' + game.currentOpponent.healthPoints + '</p>'
             );
             heroBattlePortrait.html(heroHTML);
             opponentBattlePortrait.html(opponentHTML);
+            // Small formatting workaround to make the center column the same height as the outer columns.
+            $('.col-xs-2').height($('.col-xs-5').height());
+
         },
 
         updateHealthAndAttack: function() {
@@ -199,8 +201,21 @@ $(document).ready(function() {
             if (opponentHP < 0) {
                 opponentHP = 0;
             }
-            heroHPDiv.html('Health:' + heroHP);
-            opponentHPDiv.html('Health:' + opponentHP);
+            // Update values, and animate the update.
+            heroHPDiv.html('Health: ' + heroHP);
+            heroHPDiv.animate(
+                {color: '#451111'},
+                200, function(){
+                    $(this).animate({color: '#333'},100);
+                }
+            );
+            opponentHPDiv.html('Health: ' + opponentHP);
+            opponentHPDiv.animate(
+                {color: '#451111'},
+                200, function(){
+                    $(this).animate({color: '#333'},100);
+                }
+            );
         },
 
         createNewRound: function() {
@@ -283,5 +298,10 @@ $(document).ready(function() {
     $(document).on('click', '#button-reset', function(event) {
         game.createNewGame();
     });
+
+
+    // Small formatting workaround
+
+
 
 });

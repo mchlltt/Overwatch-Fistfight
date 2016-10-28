@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Overwatch Fist Fight</title>
-    <!-- For media queries. -->
+    <!-- For media queries in Bootstrap -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Link to the jQuery Library -->
     <script src="https://code.jquery.com/jquery-2.2.3.js"></script>
+    <!-- jQuery Color for color animation. -->
+    <script src="https://code.jquery.com/color/jquery.color.plus-names-2.1.2.min.js"></script>
     <!-- reset.css to clear browser defaults -->
     <link rel="stylesheet" href="assets/css/reset.css">
     <!-- Bootstrap CDN link -->
@@ -23,13 +25,15 @@
 </head>
 
 <body class="center-block">
+    <!-- A semi-transparent box laid over the background. -->
     <div class="transparency-wrapper">
+        <!-- Header -->
         <header class="row center-block">
             <h1 class="text-center">Overwatch Fist Fight</h1>
-            <h3 class="text-center">~like Overwatch, if all you could do was 1v1 melee attack~</h3>
-            <h2 id="selected-hero" class="text-center"></h2>
+            <h4 class="text-center">~like Overwatch, if all you could do was 1v1 melee attack~</h4>
         </header>
 
+        <!-- Hero selection div -->
         <div class="row stage-1 center-block">
             <div class="col-xs-12">
                 <h3 class="text-center">Select your hero</h3>
@@ -42,6 +46,7 @@
             </div>
         </div>
 
+        <!-- Opponent selection div -->
         <div class="row stage-2 center-block">
             <div class="col-xs-12">
                 <h3 class="text-center">Select an opponent</h3>
@@ -53,22 +58,31 @@
             </div>
         </div>
 
-        <div class="row stage-3">
-            <!-- Your hero and health -->
-            <div class="col-xs-5" id="your-hero"></div>
-            <div class="col-xs-2">
-                <!-- Battle title and attack button -->
-                <h3 class="text-center">Battle</h3>
-                <button class="btn btn-danger center-block" id="button-attack"><p class="button-text">Melee</p></button>
-                <!-- Declares win or loss. -->
-                <div class="stage-4">
-                    <h3 id="completion-message" class="text-center"></h3>
-                    <!-- Reset button text depends on result. -->
-                    <button class="btn btn-info center-block" id="button-reset"></button>
+        <!-- Battle and Win/Loss Div -->
+        <div class="row stage-3 center-block">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3 class="text-center">Battle</h3>
                 </div>
             </div>
-            <!-- Your opponent and their health -->
-            <div class="col-xs-5" id="your-opponent"></div>
+            <div class="row">
+                <!-- Your hero and health -->
+                <div class="col-xs-5" id="your-hero"></div>
+                <!-- Center column holds buttons and win/loss display -->
+                <div class="col-xs-2">
+                    <!-- Battle title and attack button -->
+                    <button class="btn btn-danger center-block" id="button-attack"><h3 class="button-text">Melee</h3></button>
+                    <!-- Declares win or loss. -->
+                    <div class="stage-4">
+                        <!-- A different message displays based on win or loss. -->
+                        <h2 id="completion-message" class="text-center result"></h2>
+                        <!-- The reset button also has a different message if you win or lose. -->
+                        <button class="btn btn-info center-block" id="button-reset"></button>
+                    </div>
+                </div>
+                <!-- Your opponent and their health -->
+                <div class="col-xs-5" id="your-opponent"></div>
+            </div>
         </div>
     </div>
 
