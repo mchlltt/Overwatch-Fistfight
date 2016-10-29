@@ -1,62 +1,75 @@
 /* Basic styles */
+
 body {
-	background: skyblue url("../images/background.jpg");
-	font-family: "Boogaloo", Arial, Verdana;
-	max-width: 100%;
+    background: skyblue url("../images/background.jpg");
+    font-family: "Boogaloo", Arial, Verdana;
+    max-width: 100%;
 }
 
 .row {
-	max-width: 100%;
+    max-width: 100%;
 }
 
 img {
-	max-width: 200px;
-	width: 100%;
+    max-width: 200px;
+    width: 100%;
 }
+
 
 /* A semi-transparent box over the background.*/
+
 .transparency-wrapper {
-	background-color: lightgray;
-	background-color: rgba(255, 255, 255, .7);
-	height: 100vh;
+    background-color: lightgray;
+    background-color: rgba(255, 255, 255, .7);
+    height: 100vh;
 }
+
 
 /* Divs are sorted by stage in the game. Only stage-1 shows initially. */
-.stage-2, .stage-3, .stage-4 {
-	display: none;
+
+.stage-2,
+.stage-3,
+.stage-4 {
+    display: none;
 }
 
+
 /* Font sizes */
+
 p {
-	font-size: 24px;
+    font-size: 24px;
 }
 
 h1 {
-	font-size: 100px;
+    font-size: 100px;
 }
 
 h2 {
-	font-size: 84px;
+    font-size: 84px;
 }
 
 h3 {
-	font-size: 48px;
+    font-size: 48px;
 }
 
 h4 {
-	font-size: 36px;
+    font-size: 36px;
 }
 
 header {
-	margin-bottom: 40px;
+    margin-bottom: 40px;
 }
+
 
 /* Button styles */
+
 .button-text {
-	margin: 0;
+    margin: 0;
 }
 
-/* Push attack button down. */
+
+/* Move attack button down. */
+
 .btn-danger {
-	margin-top: 50%;
+    margin-top: 50%;
 }
